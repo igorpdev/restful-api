@@ -19,8 +19,13 @@ public class UserService {
       return obj.get();
     }
 
-    public Optional<User> create(User user){
-      return Optional.of(userRepository.save(user));
+    public User create(User user) {
+      return userRepository.save(user);
+    }
+
+    public User update(User user, String cpf) {
+      user.setCpf(cpf);
+      return userRepository.save(user);
     }
 
     public void deleteByCpf(String cpf) {

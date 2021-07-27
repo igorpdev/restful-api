@@ -1,7 +1,8 @@
 package com.igorpdev.restfulapi.controllers;
 
+import java.net.URI;
+
 import com.igorpdev.restfulapi.model.User;
-import com.igorpdev.restfulapi.repositories.UserRepository;
 import com.igorpdev.restfulapi.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +18,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RestControllerAdvice
 @RequestMapping("/users")
 public class UserController {
-    
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
 
     @PostMapping
     public ResponseEntity<User> postUser(@RequestBody User user) {
-		userService.create(user);
+		user = userService.create(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{cpf}")
+        .buildAndExpand(user.getCpf()).toUri();
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).build();
+			return ResponseEntity.created(uri).body(user);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -47,8 +48,8 @@ public class UserController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public User putUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public User putUser(@RequestBody User user, @PathVariable String cpf) {
+        return userService.update(user, cpf);
     }
 
     @DeleteMapping("/{cpf}")
