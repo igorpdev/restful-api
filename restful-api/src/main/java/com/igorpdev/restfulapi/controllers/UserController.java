@@ -1,9 +1,5 @@
 package com.igorpdev.restfulapi.controllers;
 
-import java.util.Optional;
-
-import javax.validation.Valid;
-
 import com.igorpdev.restfulapi.model.User;
 import com.igorpdev.restfulapi.repositories.UserRepository;
 import com.igorpdev.restfulapi.services.UserService;
@@ -35,9 +31,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> postUser(@RequestBody User user) {
-		Optional<User> user = userService.create(user);
+		userService.create(user);
 		try {
-			return ResponseEntity.status(HttpStatus.CREATED).body(user.get());
+			return ResponseEntity.status(HttpStatus.CREATED).build();
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -46,7 +42,7 @@ public class UserController {
     @GetMapping(value = "/{cpf}")
     @ResponseStatus(HttpStatus.OK)
     public User getUser(@PathVariable String cpf) {
-        return userRepository.findByCpf(cpf);
+        return userService.findByCpf(cpf);
     }
 
     @PutMapping
@@ -57,7 +53,7 @@ public class UserController {
 
     @DeleteMapping("/{cpf}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable String cpf, User user) {
-        userService.delete(user);
+    public void deleteUser(@PathVariable String cpf) {
+        userService.deleteByCpf(cpf);
     }
 }
