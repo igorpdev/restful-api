@@ -1,6 +1,9 @@
 package com.igorpdev.restfulapi.controllers;
 
 import com.igorpdev.restfulapi.model.User;
+
+import javax.validation.Valid;
+
 import com.igorpdev.restfulapi.dto.UserDTO;
 import com.igorpdev.restfulapi.services.UserService;
 
@@ -27,7 +30,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> postUser(@RequestBody UserDTO dto) {
+    public ResponseEntity<User> postUser(@Valid @RequestBody UserDTO dto) {
 		User user = userService.create(dto.userToDto());
 		try {
 			return new ResponseEntity<>(user, HttpStatus.CREATED);
