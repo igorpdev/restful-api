@@ -34,13 +34,23 @@ public class User implements Serializable {
     @Column(nullable = false)
     private LocalDate birthDate;
 
+    public User(String name, String email, String cpf, LocalDate birthDate) {
+        this.name = name;
+        this.email = email;
+        this.cpf = cpf;
+        this.birthDate = birthDate;
+    }
+
+    public User() {
+    }
+
     @Component
 	public class LocalDateSpringConverter implements Converter<String, LocalDate> {
 
 		@Override
 		public LocalDate convert(String value) {
 			if (value != null) {
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 				return LocalDate.parse(value, formatter);
 			} else {
 				return null;

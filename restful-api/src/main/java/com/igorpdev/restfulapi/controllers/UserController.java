@@ -1,8 +1,7 @@
 package com.igorpdev.restfulapi.controllers;
 
-import java.net.URI;
-
 import com.igorpdev.restfulapi.model.User;
+import com.igorpdev.restfulapi.dto.UserDTO;
 import com.igorpdev.restfulapi.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RestControllerAdvice
@@ -29,12 +27,10 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> postUser(@RequestBody User user) {
-		user = userService.create(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{cpf}")
-        .buildAndExpand(user.getCpf()).toUri();
+    public ResponseEntity<User> postUser(@RequestBody UserDTO dto) {
+		User user = userService.create(dto.userToDto());
 		try {
-			return ResponseEntity.created(uri).body(user);
+			return new ResponseEntity<>(user, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
